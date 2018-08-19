@@ -10,19 +10,19 @@
 //*********************************************************
 
 #include "stdafx.h"
-#include "HelloDXRApp.h"
+#include "DXRStarterApp.h"
 #include "DirectXRaytracingHelper.h"
 #include "CompiledShaders\Raytracing.hlsl.h"
 
 using namespace std;
 using namespace DX;
 
-const wchar_t* HelloDXRApp::c_hitGroupName = L"MyHitGroup";
-const wchar_t* HelloDXRApp::c_raygenShaderName = L"MyRaygenShader";
-const wchar_t* HelloDXRApp::c_closestHitShaderName = L"MyClosestHitShader";
-const wchar_t* HelloDXRApp::c_missShaderName = L"MyMissShader";
+const wchar_t* DXRStarterApp::c_hitGroupName = L"MyHitGroup";
+const wchar_t* DXRStarterApp::c_raygenShaderName = L"MyRaygenShader";
+const wchar_t* DXRStarterApp::c_closestHitShaderName = L"MyClosestHitShader";
+const wchar_t* DXRStarterApp::c_missShaderName = L"MyMissShader";
 
-HelloDXRApp::HelloDXRApp(UINT width, UINT height, std::wstring name) :
+DXRStarterApp::DXRStarterApp(UINT width, UINT height, std::wstring name) :
     DXSample(width, height, name),
     m_raytracingOutputResourceUAVDescriptorHeapIndex(UINT_MAX),
     m_curRotationAngleRad(0.0f),
@@ -33,7 +33,7 @@ HelloDXRApp::HelloDXRApp(UINT width, UINT height, std::wstring name) :
     UpdateForSizeChange(width, height);
 }
 
-void HelloDXRApp::EnableDXRExperimentalFeatures(IDXGIAdapter1* adapter)
+void DXRStarterApp::EnableDXRExperimentalFeatures(IDXGIAdapter1* adapter)
 {
     // DXR is an experimental feature and needs to be enabled before creating a D3D12 device.
     m_isDxrSupported = EnableRaytracing(adapter);
@@ -53,7 +53,7 @@ void HelloDXRApp::EnableDXRExperimentalFeatures(IDXGIAdapter1* adapter)
     }
 }
 
-void HelloDXRApp::OnInit()
+void DXRStarterApp::OnInit()
 {
     m_deviceResources = std::make_unique<DeviceResources>(
         DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -80,7 +80,7 @@ void HelloDXRApp::OnInit()
 }
 
 // Update camera matrices passed into the shader.
-void HelloDXRApp::UpdateCameraMatrices()
+void DXRStarterApp::UpdateCameraMatrices()
 {
     auto frameIndex = m_deviceResources->GetCurrentFrameIndex();
 
@@ -94,7 +94,7 @@ void HelloDXRApp::UpdateCameraMatrices()
 }
 
 // Initialize scene rendering parameters.
-void HelloDXRApp::InitializeScene()
+void DXRStarterApp::InitializeScene()
 {
     auto frameIndex = m_deviceResources->GetCurrentFrameIndex();
 
@@ -146,7 +146,7 @@ void HelloDXRApp::InitializeScene()
 }
 
 // Create constant buffers.
-void HelloDXRApp::CreateConstantBuffers()
+void DXRStarterApp::CreateConstantBuffers()
 {
     auto device = m_deviceResources->GetD3DDevice();
     auto frameCount = m_deviceResources->GetBackBufferCount();
@@ -173,7 +173,7 @@ void HelloDXRApp::CreateConstantBuffers()
 }
 
 // Create resources that depend on the device.
-void HelloDXRApp::CreateDeviceDependentResources()
+void DXRStarterApp::CreateDeviceDependentResources()
 {
     // Initialize raytracing pipeline.
 
@@ -205,7 +205,7 @@ void HelloDXRApp::CreateDeviceDependentResources()
     CreateRaytracingOutputResource();
 }
 
-void HelloDXRApp::SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ComPtr<ID3D12RootSignature>* rootSig)
+void DXRStarterApp::SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE_DESC& desc, ComPtr<ID3D12RootSignature>* rootSig)
 {
     auto device = m_deviceResources->GetD3DDevice();
     ComPtr<ID3DBlob> blob;
@@ -223,7 +223,7 @@ void HelloDXRApp::SerializeAndCreateRaytracingRootSignature(D3D12_ROOT_SIGNATURE
     }
 }
 
-void HelloDXRApp::CreateRootSignatures()
+void DXRStarterApp::CreateRootSignatures()
 {
     auto device = m_deviceResources->GetD3DDevice();
 
@@ -263,7 +263,7 @@ void HelloDXRApp::CreateRootSignatures()
 }
 
 // Create raytracing device and command list.
-void HelloDXRApp::CreateRaytracingInterfaces()
+void DXRStarterApp::CreateRaytracingInterfaces()
 {
     auto device = m_deviceResources->GetD3DDevice();
     auto commandList = m_deviceResources->GetCommandList();
@@ -285,7 +285,7 @@ void HelloDXRApp::CreateRaytracingInterfaces()
 
 // Local root signature and shader association
 // This is a root signature that enables a shader to have unique arguments that come from shader tables.
-void HelloDXRApp::CreateLocalRootSignatureSubobjects(CD3D12_STATE_OBJECT_DESC* raytracingPipeline)
+void DXRStarterApp::CreateLocalRootSignatureSubobjects(CD3D12_STATE_OBJECT_DESC* raytracingPipeline)
 {
     // Local root signature to be used in a hit group.
     auto localRootSignature = raytracingPipeline->CreateSubobject<CD3D12_LOCAL_ROOT_SIGNATURE_SUBOBJECT>();
@@ -315,7 +315,7 @@ void HelloDXRApp::CreateLocalRootSignatureSubobjects(CD3D12_STATE_OBJECT_DESC* r
 // Create a raytracing pipeline state object (RTPSO).
 // An RTPSO represents a full set of shaders reachable by a DispatchRays() call,
 // with all configuration options resolved, such as local signatures and other state.
-void HelloDXRApp::CreateRaytracingPipelineStateObject()
+void DXRStarterApp::CreateRaytracingPipelineStateObject()
 {
     // Create 7 subobjects that combine into a RTPSO:
     // Subobjects need to be associated with DXIL exports (i.e. shaders) either by way of default or explicit associations.
@@ -393,7 +393,7 @@ void HelloDXRApp::CreateRaytracingPipelineStateObject()
 }
 
 // Create 2D output texture for raytracing.
-void HelloDXRApp::CreateRaytracingOutputResource()
+void DXRStarterApp::CreateRaytracingOutputResource()
 {
     auto device = m_deviceResources->GetD3DDevice();
     auto backbufferFormat = m_deviceResources->GetBackBufferFormat();
@@ -414,7 +414,7 @@ void HelloDXRApp::CreateRaytracingOutputResource()
     m_raytracingOutputResourceUAVGpuDescriptor = CD3DX12_GPU_DESCRIPTOR_HANDLE(m_descriptorHeap->GetGPUDescriptorHandleForHeapStart(), m_raytracingOutputResourceUAVDescriptorHeapIndex, m_descriptorSize);
 }
 
-void HelloDXRApp::CreateDescriptorHeap()
+void DXRStarterApp::CreateDescriptorHeap()
 {
     auto device = m_deviceResources->GetD3DDevice();
 
@@ -434,7 +434,7 @@ void HelloDXRApp::CreateDescriptorHeap()
 }
 
 // Build geometry used in the sample.
-void HelloDXRApp::BuildGeometry()
+void DXRStarterApp::BuildGeometry()
 {
     auto device = m_deviceResources->GetD3DDevice();
 
@@ -505,7 +505,7 @@ void HelloDXRApp::BuildGeometry()
 }
 
 // Build acceleration structures needed for raytracing.
-void HelloDXRApp::BuildAccelerationStructures()
+void DXRStarterApp::BuildAccelerationStructures()
 {
     auto device = m_deviceResources->GetD3DDevice();
     auto commandList = m_deviceResources->GetCommandList();
@@ -679,7 +679,7 @@ void HelloDXRApp::BuildAccelerationStructures()
 
 // Build shader tables.
 // This encapsulates all shader records - shaders and the arguments for their local root signatures.
-void HelloDXRApp::BuildShaderTables()
+void DXRStarterApp::BuildShaderTables()
 {
     auto device = m_deviceResources->GetD3DDevice();
 
@@ -742,7 +742,7 @@ void HelloDXRApp::BuildShaderTables()
     }
 }
 
-void HelloDXRApp::SelectRaytracingAPI(RaytracingAPI type)
+void DXRStarterApp::SelectRaytracingAPI(RaytracingAPI type)
 {
     if (type == RaytracingAPI::FallbackLayer)
     {
@@ -761,7 +761,7 @@ void HelloDXRApp::SelectRaytracingAPI(RaytracingAPI type)
     }
 }
 
-void HelloDXRApp::OnKeyDown(UINT8 key)
+void DXRStarterApp::OnKeyDown(UINT8 key)
 {
     // Store previous values.
     RaytracingAPI previousRaytracingAPI = m_raytracingAPI;
@@ -796,7 +796,7 @@ void HelloDXRApp::OnKeyDown(UINT8 key)
 }
 
 // Update frame-based values.
-void HelloDXRApp::OnUpdate()
+void DXRStarterApp::OnUpdate()
 {
     m_timer.Tick();
     CalculateFrameStats();
@@ -827,7 +827,7 @@ void HelloDXRApp::OnUpdate()
 
 
 // Parse supplied command line args.
-void HelloDXRApp::ParseCommandLineArgs(WCHAR* argv[], int argc)
+void DXRStarterApp::ParseCommandLineArgs(WCHAR* argv[], int argc)
 {
     DXSample::ParseCommandLineArgs(argv, argc);
 
@@ -845,7 +845,7 @@ void HelloDXRApp::ParseCommandLineArgs(WCHAR* argv[], int argc)
     }
 }
 
-void HelloDXRApp::DoRaytracing()
+void DXRStarterApp::DoRaytracing()
 {
     auto commandList = m_deviceResources->GetCommandList();
     auto frameIndex = m_deviceResources->GetCurrentFrameIndex();
@@ -899,13 +899,13 @@ void HelloDXRApp::DoRaytracing()
 }
 
 // Update the application state with the new resolution.
-void HelloDXRApp::UpdateForSizeChange(UINT width, UINT height)
+void DXRStarterApp::UpdateForSizeChange(UINT width, UINT height)
 {
     DXSample::UpdateForSizeChange(width, height);
 }
 
 // Copy the raytracing output to the backbuffer.
-void HelloDXRApp::CopyRaytracingOutputToBackbuffer()
+void DXRStarterApp::CopyRaytracingOutputToBackbuffer()
 {
     auto commandList= m_deviceResources->GetCommandList();
     auto renderTarget = m_deviceResources->GetRenderTarget();
@@ -925,20 +925,20 @@ void HelloDXRApp::CopyRaytracingOutputToBackbuffer()
 }
 
 // Create resources that are dependent on the size of the main window.
-void HelloDXRApp::CreateWindowSizeDependentResources()
+void DXRStarterApp::CreateWindowSizeDependentResources()
 {
     CreateRaytracingOutputResource(); 
     UpdateCameraMatrices();
 }
 
 // Release resources that are dependent on the size of the main window.
-void HelloDXRApp::ReleaseWindowSizeDependentResources()
+void DXRStarterApp::ReleaseWindowSizeDependentResources()
 {
     m_raytracingOutput.Reset();
 }
 
 // Release all resources that depend on the device.
-void HelloDXRApp::ReleaseDeviceDependentResources()
+void DXRStarterApp::ReleaseDeviceDependentResources()
 {
     m_fallbackDevice.Reset();
     m_fallbackCommandList.Reset();
@@ -968,7 +968,7 @@ void HelloDXRApp::ReleaseDeviceDependentResources()
 
 }
 
-void HelloDXRApp::RecreateD3D()
+void DXRStarterApp::RecreateD3D()
 {
     // Give GPU a chance to finish its execution in progress.
     try
@@ -983,7 +983,7 @@ void HelloDXRApp::RecreateD3D()
 }
 
 // Render the scene.
-void HelloDXRApp::OnRender()
+void DXRStarterApp::OnRender()
 {
     if (!m_deviceResources->IsWindowVisible())
     {
@@ -997,7 +997,7 @@ void HelloDXRApp::OnRender()
     m_deviceResources->Present(D3D12_RESOURCE_STATE_PRESENT);
 }
 
-void HelloDXRApp::OnDestroy()
+void DXRStarterApp::OnDestroy()
 {
     // Let GPU finish before releasing D3D resources.
     m_deviceResources->WaitForGpu();
@@ -1005,21 +1005,21 @@ void HelloDXRApp::OnDestroy()
 }
 
 // Release all device dependent resouces when a device is lost.
-void HelloDXRApp::OnDeviceLost()
+void DXRStarterApp::OnDeviceLost()
 {
     ReleaseWindowSizeDependentResources();
     ReleaseDeviceDependentResources();
 }
 
 // Create all device dependent resources when a device is restored.
-void HelloDXRApp::OnDeviceRestored()
+void DXRStarterApp::OnDeviceRestored()
 {
     CreateDeviceDependentResources();
     CreateWindowSizeDependentResources();
 }
 
 // Compute the average frames per second and million rays per second.
-void HelloDXRApp::CalculateFrameStats()
+void DXRStarterApp::CalculateFrameStats()
 {
     static int frameCnt = 0;
     static double elapsedTime = 0.0f;
@@ -1062,7 +1062,7 @@ void HelloDXRApp::CalculateFrameStats()
 }
 
 // Handle OnSizeChanged message event.
-void HelloDXRApp::OnSizeChanged(UINT width, UINT height, bool minimized)
+void DXRStarterApp::OnSizeChanged(UINT width, UINT height, bool minimized)
 {
     if (!m_deviceResources->WindowSizeChanged(width, height, minimized))
     {
@@ -1076,7 +1076,7 @@ void HelloDXRApp::OnSizeChanged(UINT width, UINT height, bool minimized)
 }
 
 // Create a wrapped pointer for the Fallback Layer path.
-WRAPPED_GPU_POINTER HelloDXRApp::CreateFallbackWrappedPointer(ID3D12Resource* resource, UINT bufferNumElements)
+WRAPPED_GPU_POINTER DXRStarterApp::CreateFallbackWrappedPointer(ID3D12Resource* resource, UINT bufferNumElements)
 {
     auto device = m_deviceResources->GetD3DDevice();
 
@@ -1100,7 +1100,7 @@ WRAPPED_GPU_POINTER HelloDXRApp::CreateFallbackWrappedPointer(ID3D12Resource* re
 
 // Allocate a descriptor and return its index. 
 // If the passed descriptorIndexToUse is valid, it will be used instead of allocating a new one.
-UINT HelloDXRApp::AllocateDescriptor(D3D12_CPU_DESCRIPTOR_HANDLE* cpuDescriptor, UINT descriptorIndexToUse)
+UINT DXRStarterApp::AllocateDescriptor(D3D12_CPU_DESCRIPTOR_HANDLE* cpuDescriptor, UINT descriptorIndexToUse)
 {
     auto descriptorHeapCpuBase = m_descriptorHeap->GetCPUDescriptorHandleForHeapStart();
     if (descriptorIndexToUse >= m_descriptorHeap->GetDesc().NumDescriptors)
@@ -1112,7 +1112,7 @@ UINT HelloDXRApp::AllocateDescriptor(D3D12_CPU_DESCRIPTOR_HANDLE* cpuDescriptor,
 }
 
 // Create SRV for a buffer.
-UINT HelloDXRApp::CreateBufferSRV(D3DBuffer* buffer, UINT numElements, UINT elementSize)
+UINT DXRStarterApp::CreateBufferSRV(D3DBuffer* buffer, UINT numElements, UINT elementSize)
 {
     auto device = m_deviceResources->GetD3DDevice();
 

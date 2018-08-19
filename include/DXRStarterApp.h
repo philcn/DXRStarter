@@ -38,7 +38,7 @@ namespace LocalRootSignatureParams {
 // Fallback Layer uses DirectX Raytracing if a driver and OS supports it. 
 // Otherwise, it falls back to compute pipeline to emulate raytracing.
 // Developers aiming for a wider HW support should target Fallback Layer.
-class HelloDXRApp : public DXSample
+class DXRStarterApp : public DXSample
 {
     enum class RaytracingAPI {
         FallbackLayer,
@@ -46,7 +46,7 @@ class HelloDXRApp : public DXSample
     };
 
 public:
-    HelloDXRApp(UINT width, UINT height, std::wstring name);
+    DXRStarterApp(UINT width, UINT height, std::wstring name);
 
     // IDeviceNotify
     virtual void OnDeviceLost() override;

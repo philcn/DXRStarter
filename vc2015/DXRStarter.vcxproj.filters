@@ -41,7 +41,7 @@
     <ClInclude Include="..\include\utils\DXSample.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\HelloDXRApp.h">
+    <ClInclude Include="..\include\DXRStarterApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\assets\shaders\RaytracingHlslCompat.h">
@@ -67,7 +67,7 @@
     <ClCompile Include="..\src\utils\DeviceResources.cpp">
       <Filter>Source Files\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\HelloDXRApp.cpp">
+    <ClCompile Include="..\src\DXRStarterApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\stdafx.cpp">
